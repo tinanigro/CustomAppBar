@@ -1,0 +1,28 @@
+﻿<Page x:Class="AppBar.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:AppBar"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:yolo="using:Yolo"
+      mc:Ignorable="d"
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <yolo:AppBar Background="CornflowerBlue"
+                                   x:Name="Test">
+            <yolo:AppBar.PrimaryCommands>
+                <AppBarButton Label="test"
+                              Icon="Accept" />
+                <AppBarButton Label="test"
+                              Icon="Accept" />
+                <AppBarButton Label="test"
+                              Icon="Accept" />
+            </yolo:AppBar.PrimaryCommands>
+            <yolo:AppBar.SecondaryCommands>
+                <AppBarButton Label="coucou ca va?"/>
+                <AppBarButton Label="ceci est un test"/>
+            </yolo:AppBar.SecondaryCommands>
+        </yolo:AppBar>
+    </Grid>
+</Page>
