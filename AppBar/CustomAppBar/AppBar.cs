@@ -27,6 +27,8 @@ namespace Yolo
         private const string EllipseLessAppBarButtonStyleName = "EllipseLessAppBarButtonStyle";
         private const string MenuAppBarButtonStyleName = "MenuAppBarButtonStyle";
         private const string CompositeTransformName = "CompositeTransform";
+        private const string TapRowDefinitionName = "TapRowDefinition";
+        private const string TapGridName = "TapGrid";
 
         private Storyboard _fadeInProperty;
         private Storyboard _fadeOutProperty;
@@ -36,7 +38,9 @@ namespace Yolo
         private bool _isOpen;
         private static Style _ellipseLessAppBarButtonStyle;
         private static Style _menuAppBarButtonStyle;
-        private static PlaneProjection _compositeTransform;
+        private PlaneProjection _compositeTransform;
+        private RowDefinition _tapRowDefinition;
+        private Grid _tapGrid;
 
         #region AppBarPrimaryCommands Property
         public IList<ICommandBarElement> PrimaryCommands
@@ -113,8 +117,6 @@ namespace Yolo
         }
         #endregion
 
-
-
         public AppBar()
         {
             DefaultStyleKey = typeof(AppBar);
@@ -139,6 +141,9 @@ namespace Yolo
             SecondaryCommands = UpdateMenuButtonStyles(SecondaryCommands);
             PrimaryCommands = UpdateMainButtonStyles(PrimaryCommands);
             _compositeTransform = GetTemplateChild(CompositeTransformName) as PlaneProjection;
+            _tapRowDefinition = GetTemplateChild(TapRowDefinitionName) as RowDefinition;
+            _tapGrid = GetTemplateChild(TapGridName) as Grid;
+
             _toggleAppBarButton.Loaded += (sender, args) =>
             {
                 _toggleAppBarButton.Tapped += ToggleAppBarButtonOnTap;
@@ -146,6 +151,7 @@ namespace Yolo
                 _toggleAppBarButton.ManipulationDelta += ToggleAppBarButtonOnManipulationDelta;
                 _toggleAppBarButton.ManipulationCompleted += ToggleAppBarButtonOnManipulationCompleted;
             };
+            _tapGrid.Tapped += ToggleAppBarButtonOnTap;
         }
 
         private void ToggleAppBarButtonOnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs manipulationCompletedRoutedEventArgs)
@@ -165,14 +171,14 @@ namespace Yolo
         {
             Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (_compositeTransform.GlobalOffsetY > -1 && _compositeTransform.GlobalOffsetY < 351)
+                if (_compositeTransform.GlobalOffsetY > -1 && _compositeTransform.GlobalOffsetY < 301)
                 {
                     _compositeTransform.GlobalOffsetY += manipulationDeltaRoutedEventArgs.Delta.Translation.Y;
                 }
                 if (_compositeTransform.GlobalOffsetY < 0)
                     _compositeTransform.GlobalOffsetY = 0;
-                else if (_compositeTransform.GlobalOffsetY > 350)
-                    _compositeTransform.GlobalOffsetY = 350;
+                else if (_compositeTransform.GlobalOffsetY > 300)
+                    _compositeTransform.GlobalOffsetY = 300;
             });
             Debug.WriteLine(manipulationDeltaRoutedEventArgs.Delta.Translation.Y + " control : " + _compositeTransform.GlobalOffsetY);
         }
@@ -193,20 +199,23 @@ namespace Yolo
                 Show();
             }
         }
+
         public void Show()
         {
+            var height = Window.Current.Bounds.Height;
             if (_fadeInProperty != null)
             {
+                _tapRowDefinition.Height = new GridLength(height-350, GridUnitType.Pixel);
                 _fadeInProperty.Begin();
                 _isOpen = true;
             }
-
         }
 
         public void Hide()
         {
             if (_fadeOutProperty != null)
             {
+                _tapRowDefinition.Height = new GridLength(0, GridUnitType.Pixel);
                 _fadeOutProperty.Begin();
                 _isOpen = false;
             }

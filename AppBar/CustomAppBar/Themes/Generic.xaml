@@ -100,8 +100,6 @@
             <Setter.Value>
                 <ControlTemplate TargetType="yolo:AppBar">
                     <Grid x:Name="AppBar"
-                          Background="{TemplateBinding Background}"
-                          MaxHeight="460"
                           VerticalAlignment="Bottom"
                           RenderTransformOrigin="0.5,0.5">
                         <Grid.Resources>
@@ -270,49 +268,60 @@
                             </Storyboard>
                         </Grid.Resources>
                         <Grid.Projection>
-                            <PlaneProjection GlobalOffsetY="350"
+                            <PlaneProjection GlobalOffsetY="300"
                                              x:Name="CompositeTransform" />
                         </Grid.Projection>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="60" />
-                            <RowDefinition Height="350"
-                                           x:Name="MenuRowDefinition" />
+                            <RowDefinition x:Name="TapRowDefinition"
+                                           Height="0" />
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <Grid Grid.Row="1">
-                            <ListView x:Name="SecondaryCommands"
-                                      ItemsSource="{TemplateBinding SecondaryCommands}"
-                                      Margin="12,24,0,0">
-                                <ListView.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <ItemsStackPanel />
-                                    </ItemsPanelTemplate>
-                                </ListView.ItemsPanel>
-                            </ListView>
-                        </Grid>
-                        <Grid Grid.Row="0">
-                            <ListView Grid.Column="0"
-                                      x:Name="PrimaryCommands"
-                                      Margin="0,0,0,-12"
-                                      ItemsSource="{TemplateBinding PrimaryCommands}">
-                                <ListView.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <ItemsStackPanel Orientation="Horizontal"
-                                                         HorizontalAlignment="Center" />
-                                    </ItemsPanelTemplate>
-                                </ListView.ItemsPanel>
-                            </ListView>
-                            <Button Name="ToggleAppBarButton"
-                                    Height="60"
-                                    Width="60"
-                                    Style="{StaticResource TextBlockButtonStyle}"
-                                    VerticalContentAlignment="Top"
-                                    HorizontalAlignment="Right">
-                                <TextBlock Text=""
-                                           FontFamily="Segoe UI Symbol"
-                                           Margin="0,-5,0,0"
-                                           FontSize="24"
-                                           HorizontalAlignment="Center" />
-                            </Button>
+                        <Grid x:Name="TapGrid"
+                              Background="Transparent"
+                              Grid.Row="0" />
+                        <Grid Grid.Row="1"
+                              Background="{TemplateBinding Background}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="60" />
+                                <RowDefinition Height="300"
+                                               x:Name="MenuRowDefinition" />
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="1">
+                                <ListView x:Name="SecondaryCommands"
+                                          ItemsSource="{TemplateBinding SecondaryCommands}"
+                                          Margin="12,24,0,0">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <ItemsStackPanel />
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                </ListView>
+                            </Grid>
+                            <Grid Grid.Row="0">
+                                <ListView Grid.Column="0"
+                                          x:Name="PrimaryCommands"
+                                          Margin="0,0,0,-12"
+                                          ItemsSource="{TemplateBinding PrimaryCommands}">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <ItemsStackPanel Orientation="Horizontal"
+                                                             HorizontalAlignment="Center" />
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                </ListView>
+                                <Button Name="ToggleAppBarButton"
+                                        Height="60"
+                                        Width="60"
+                                        Style="{StaticResource TextBlockButtonStyle}"
+                                        VerticalContentAlignment="Top"
+                                        HorizontalAlignment="Right">
+                                    <TextBlock Text=""
+                                               FontFamily="Segoe UI Symbol"
+                                               Margin="0,-5,0,0"
+                                               FontSize="24"
+                                               HorizontalAlignment="Center" />
+                                </Button>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </ControlTemplate>
