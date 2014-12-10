@@ -10,18 +10,11 @@
 
     <Grid>
         <yolo:AppBar Background="CornflowerBlue"
-                                   x:Name="Test">
-            <yolo:AppBar.PrimaryCommands>
-                <AppBarButton Label="test"
-                              Icon="Accept" />
-                <AppBarButton Label="test"
-                              Icon="Accept" />
-                <AppBarButton Label="test"
-                              Icon="Accept" />
-            </yolo:AppBar.PrimaryCommands>
+                     VerticalAlignment="Bottom"
+                     x:Name="Test">
             <yolo:AppBar.SecondaryCommands>
-                <AppBarButton Label="coucou ca va?"/>
-                <AppBarButton Label="ceci est un test"/>
+                <AppBarButton Label="coucou ca va?" />
+                <AppBarButton Label="ceci est un test" />
             </yolo:AppBar.SecondaryCommands>
         </yolo:AppBar>
     </Grid>

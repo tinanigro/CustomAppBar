@@ -42,6 +42,10 @@ namespace AppBar
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             //var yolo = new ItemCollection();
+            Test.PrimaryCommands.Add(new AppBarButton()
+            {
+                Label = "test",
+            });
             //yolo.Add(new AppBarButton()
             //{
             //    Label = "test",
