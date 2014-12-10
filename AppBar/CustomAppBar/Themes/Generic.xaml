@@ -257,7 +257,7 @@
                             <Storyboard x:Name="FadeOutProperty">
                                 <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.GlobalOffsetY)"
                                                                Storyboard.TargetName="AppBar">
-                                    <EasingDoubleKeyFrame KeyTime="0:0:0.4"
+                                    <EasingDoubleKeyFrame KeyTime="0:0:0.0"
                                                           x:Name="FadeOutHeightProperty">
                                         <EasingDoubleKeyFrame.EasingFunction>
                                             <ExponentialEase EasingMode="EaseOut"
@@ -268,13 +268,13 @@
                             </Storyboard>
                         </Grid.Resources>
                         <Grid.Projection>
-                            <PlaneProjection GlobalOffsetY="300"
+                            <PlaneProjection GlobalOffsetY="150"
                                              x:Name="CompositeTransform" />
                         </Grid.Projection>
                         <Grid.RowDefinitions>
                             <RowDefinition x:Name="TapRowDefinition"
                                            Height="0" />
-                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid x:Name="TapGrid"
                               Background="Transparent"
@@ -282,8 +282,9 @@
                         <Grid Grid.Row="1"
                               Background="{TemplateBinding Background}">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="60" />
-                                <RowDefinition Height="300"
+                                <RowDefinition Height="Auto"
+                                               x:Name="MainRegionRowDefinition" />
+                                <RowDefinition Height="150"
                                                x:Name="MenuRowDefinition" />
                             </Grid.RowDefinitions>
                             <Grid Grid.Row="1">
@@ -297,7 +298,8 @@
                                     </ListView.ItemsPanel>
                                 </ListView>
                             </Grid>
-                            <Grid Grid.Row="0">
+                            <Grid x:Name="PrimaryGrid"
+                                  Grid.Row="0">
                                 <ListView Grid.Column="0"
                                           x:Name="PrimaryCommands"
                                           Margin="0,0,0,-12"
@@ -315,9 +317,10 @@
                                         Style="{StaticResource TextBlockButtonStyle}"
                                         VerticalContentAlignment="Top"
                                         HorizontalAlignment="Right">
-                                    <TextBlock Text=""
+                                    <TextBlock x:Name="DotsTextBlock"
+                                               Text=""
                                                FontFamily="Segoe UI Symbol"
-                                               Margin="0,-5,0,0"
+                                               Margin="0,12,0,0"
                                                FontSize="24"
                                                HorizontalAlignment="Center" />
                                 </Button>

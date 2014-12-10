@@ -17,5 +17,7 @@
                 <AppBarButton Label="ceci est un test" />
             </yolo:AppBar.SecondaryCommands>
         </yolo:AppBar>
+        <Button Content="add or remove"
+                Click="ButtonBase_OnClick" />
     </Grid>
 </Page>

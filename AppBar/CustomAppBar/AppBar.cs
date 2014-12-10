@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Windows.ApplicationModel;
+using Windows.Phone.UI.Input;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -18,8 +20,11 @@ namespace Yolo
     [TemplatePart(Name = IsOpenPropertyName, Type = typeof(bool))]
     public sealed class AppBar : Control
     {
+        // Storyboards
         private const string FadeInPropertyName = "FadeInProperty";
         private const string FadeOutPropertyName = "FadeOutProperty";
+
+
         private const string PrimaryCommandsName = "PrimaryCommandsProperty";
         private const string SecondaryCommandsName = "SecondaryCommandsProperty";
         private const string IsOpenPropertyName = "IsOpenProperty";
@@ -28,10 +33,14 @@ namespace Yolo
         private const string MenuAppBarButtonStyleName = "MenuAppBarButtonStyle";
         private const string CompositeTransformName = "CompositeTransform";
         private const string TapRowDefinitionName = "TapRowDefinition";
+        private const string MainRegionRowDefinitionName = "MainRegionRowDefinition";
         private const string TapGridName = "TapGrid";
+        private const string DotsTextBlockName = "DotsTextBlock";
 
+        // Storyboard
         private Storyboard _fadeInProperty;
         private Storyboard _fadeOutProperty;
+
         private ListView _primaryCommands;
         private ListView _secondaryCommands;
         private Button _toggleAppBarButton;
@@ -40,13 +49,34 @@ namespace Yolo
         private static Style _menuAppBarButtonStyle;
         private PlaneProjection _compositeTransform;
         private RowDefinition _tapRowDefinition;
+        private RowDefinition _mainRegionRowDefinition;
         private Grid _tapGrid;
+        private TextBlock _dotsTextBlock;
+        private Grid _primaryGrid;
 
         #region AppBarPrimaryCommands Property
         public IList<ICommandBarElement> PrimaryCommands
         {
             get { return (IList<ICommandBarElement>)GetValue(PrimaryCommandsProperty); }
-            set { SetValue(PrimaryCommandsProperty, UpdateMainButtonStyles(value)); }
+            set
+            {
+                SetValue(PrimaryCommandsProperty, UpdateMainButtonStyles(value));
+                if (!_isOpen)
+                {
+                    if (PrimaryCommands.Any())
+                    {
+                        if (_mainRegionRowDefinition != null)
+                            _mainRegionRowDefinition.Height = new GridLength(60, GridUnitType.Pixel);
+                    }
+                    else
+                    {
+                        if (_mainRegionRowDefinition != null)
+                            _mainRegionRowDefinition.Height = new GridLength(20, GridUnitType.Pixel);
+                    }
+                    if (_dotsTextBlock != null)
+                        _dotsTextBlock.Margin = value.Any() ? new Thickness(0, -5, 0, 0) : new Thickness(0, 12, 0, 0);
+                }
+            }
         }
 
 
@@ -87,7 +117,7 @@ namespace Yolo
             get { return (IList<AppBarButton>)GetValue(SecondaryCommandsProperty); }
             set
             {
-                SetValue(SecondaryCommandsProperty, UpdateMenuButtonStyles(value));
+                SetValue(SecondaryCommandsProperty, UpdateMenuButtonStyles(value, this));
             }
         }
 
@@ -102,16 +132,17 @@ namespace Yolo
             if (that._secondaryCommands != null)
             {
                 var secondComm = dependencyPropertyChangedEventArgs.NewValue as IList<AppBarButton>;
-                that._secondaryCommands.ItemsSource = UpdateMenuButtonStyles(secondComm);
+                that._secondaryCommands.ItemsSource = UpdateMenuButtonStyles(secondComm, that);
             }
         }
 
-        static IList<AppBarButton> UpdateMenuButtonStyles(IList<AppBarButton> menucommands)
+        static IList<AppBarButton> UpdateMenuButtonStyles(IList<AppBarButton> menucommands, AppBar appBar)
         {
             if (_menuAppBarButtonStyle == null) return menucommands;
             foreach (var appBarButton in menucommands)
             {
                 appBarButton.Style = _menuAppBarButtonStyle;
+                appBarButton.Click += (sender, args) => appBar.Hide();
             }
             return menucommands;
         }
@@ -131,18 +162,24 @@ namespace Yolo
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+            //Storyboards
             _fadeInProperty = GetTemplateChild(FadeInPropertyName) as Storyboard;
             _fadeOutProperty = GetTemplateChild(FadeOutPropertyName) as Storyboard;
+
+
             _toggleAppBarButton = GetTemplateChild(ToggleAppBarButtonName) as Button;
             var rowHeight = (GetTemplateChild("MenuRowDefinition") as RowDefinition).Height;
             (GetTemplateChild("FadeOutHeightProperty") as EasingDoubleKeyFrame).Value = rowHeight.Value;
             _ellipseLessAppBarButtonStyle = GetTemplateChild(EllipseLessAppBarButtonStyleName) as Style;
             _menuAppBarButtonStyle = GetTemplateChild(MenuAppBarButtonStyleName) as Style;
-            SecondaryCommands = UpdateMenuButtonStyles(SecondaryCommands);
+            SecondaryCommands = UpdateMenuButtonStyles(SecondaryCommands, this);
             PrimaryCommands = UpdateMainButtonStyles(PrimaryCommands);
             _compositeTransform = GetTemplateChild(CompositeTransformName) as PlaneProjection;
             _tapRowDefinition = GetTemplateChild(TapRowDefinitionName) as RowDefinition;
+            _mainRegionRowDefinition = GetTemplateChild(MainRegionRowDefinitionName) as RowDefinition;
             _tapGrid = GetTemplateChild(TapGridName) as Grid;
+            _dotsTextBlock = GetTemplateChild(DotsTextBlockName) as TextBlock;
+            _dotsTextBlock.Margin = new Thickness(0, -5, 0, 0);
 
             _toggleAppBarButton.Loaded += (sender, args) =>
             {
@@ -152,6 +189,11 @@ namespace Yolo
                 _toggleAppBarButton.ManipulationCompleted += ToggleAppBarButtonOnManipulationCompleted;
             };
             _tapGrid.Tapped += ToggleAppBarButtonOnTap;
+            HardwareButtons.BackPressed += (sender, args) =>
+            {
+                args.Handled = true;
+                if (_isOpen) Hide();
+            };
         }
 
         private void ToggleAppBarButtonOnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs manipulationCompletedRoutedEventArgs)
@@ -171,14 +213,14 @@ namespace Yolo
         {
             Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (_compositeTransform.GlobalOffsetY > -1 && _compositeTransform.GlobalOffsetY < 301)
+                if (_compositeTransform.GlobalOffsetY > -1 && _compositeTransform.GlobalOffsetY < 151)
                 {
                     _compositeTransform.GlobalOffsetY += manipulationDeltaRoutedEventArgs.Delta.Translation.Y;
                 }
                 if (_compositeTransform.GlobalOffsetY < 0)
                     _compositeTransform.GlobalOffsetY = 0;
-                else if (_compositeTransform.GlobalOffsetY > 300)
-                    _compositeTransform.GlobalOffsetY = 300;
+                else if (_compositeTransform.GlobalOffsetY > 150)
+                    _compositeTransform.GlobalOffsetY = 150;
             });
             Debug.WriteLine(manipulationDeltaRoutedEventArgs.Delta.Translation.Y + " control : " + _compositeTransform.GlobalOffsetY);
         }
@@ -205,7 +247,9 @@ namespace Yolo
             var height = Window.Current.Bounds.Height;
             if (_fadeInProperty != null)
             {
-                _tapRowDefinition.Height = new GridLength(height-350, GridUnitType.Pixel);
+                _mainRegionRowDefinition.Height = new GridLength(60, GridUnitType.Pixel);
+                _dotsTextBlock.Margin = new Thickness(0, -5, 0, 0);
+                _tapRowDefinition.Height = new GridLength(height - 210, GridUnitType.Pixel);
                 _fadeInProperty.Begin();
                 _isOpen = true;
             }
@@ -215,10 +259,14 @@ namespace Yolo
         {
             if (_fadeOutProperty != null)
             {
-                _tapRowDefinition.Height = new GridLength(0, GridUnitType.Pixel);
+                _mainRegionRowDefinition.Height = PrimaryCommands.Any() ? new GridLength(60, GridUnitType.Pixel) : new GridLength(20, GridUnitType.Pixel);
+                _dotsTextBlock.Margin = PrimaryCommands.Any() ? new Thickness(0, -5, 0, 0) : new Thickness(0, 12, 0, 0); ;
                 _fadeOutProperty.Begin();
                 _isOpen = false;
+                _tapRowDefinition.Height = new GridLength(0, GridUnitType.Pixel);
             }
         }
+
     }
 }
+

@@ -42,10 +42,6 @@ namespace AppBar
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             //var yolo = new ItemCollection();
-            Test.PrimaryCommands.Add(new AppBarButton()
-            {
-                Label = "test",
-            });
             //yolo.Add(new AppBarButton()
             //{
             //    Label = "test",
@@ -61,8 +57,23 @@ namespace AppBar
             //Test.SecondaryCommands = swag;
         }
 
-        void ButtonBase_OnClick(object sender, RoutedEventArgs args)
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
+            if (Test.PrimaryCommands.Any())
+            {
+                var tt = new List<ICommandBarElement>();
+                Test.PrimaryCommands = tt;
+            }
+            else
+            {
+                var tt = new List<ICommandBarElement>();
+                tt.Add(new AppBarButton()
+                {
+                    Label = "test",
+                    Icon =new SymbolIcon(Symbol.Accept)
+                });
+                Test.PrimaryCommands = tt;
+            }
         }
     }
 }
