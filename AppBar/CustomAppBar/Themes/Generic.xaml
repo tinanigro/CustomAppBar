@@ -311,6 +311,20 @@
                                         </ItemsPanelTemplate>
                                     </ListView.ItemsPanel>
                                 </ListView>
+                                <Button Name="HomeAppBarButton"
+                                        Height="60"
+                                        Width="60"
+                                        Style="{StaticResource TextBlockButtonStyle}"
+                                        VerticalContentAlignment="Top"
+                                        HorizontalAlignment="Left"
+                                        Visibility="Collapsed">
+                                    <TextBlock x:Name="HomeTextBlock"
+                                               Text=""
+                                               FontFamily="Segoe UI Symbol"
+                                               Margin="0,14,0,0"
+                                               FontSize="24"
+                                               HorizontalAlignment="Center" />
+                                </Button>
                                 <Button Name="ToggleAppBarButton"
                                         Height="60"
                                         Width="60"

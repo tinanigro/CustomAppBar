@@ -13,6 +13,8 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace Yolo
 {
+    public delegate void HomeButtonTapped(Button button, EventArgs e);
+
     [TemplatePart(Name = FadeInPropertyName, Type = typeof(Storyboard))]
     [TemplatePart(Name = FadeOutPropertyName, Type = typeof(Storyboard))]
     [TemplatePart(Name = PrimaryCommandsName, Type = typeof(ListView))]
@@ -20,6 +22,9 @@ namespace Yolo
     [TemplatePart(Name = IsOpenPropertyName, Type = typeof(bool))]
     public sealed class AppBar : Control
     {
+        // Events
+        public event HomeButtonTapped HomeButtonClicked;
+
         // Storyboards
         private const string FadeInPropertyName = "FadeInProperty";
         private const string FadeOutPropertyName = "FadeOutProperty";
@@ -29,6 +34,7 @@ namespace Yolo
         private const string SecondaryCommandsName = "SecondaryCommandsProperty";
         private const string IsOpenPropertyName = "IsOpenProperty";
         private const string ToggleAppBarButtonName = "ToggleAppBarButton";
+        private const string HomeAppBarButtonName = "HomeAppBarButton";
         private const string EllipseLessAppBarButtonStyleName = "EllipseLessAppBarButtonStyle";
         private const string MenuAppBarButtonStyleName = "MenuAppBarButtonStyle";
         private const string CompositeTransformName = "CompositeTransform";
@@ -44,6 +50,7 @@ namespace Yolo
         private ListView _primaryCommands;
         private ListView _secondaryCommands;
         private Button _toggleAppBarButton;
+        private Button _homeAppBarButton;
         private bool _isOpen;
         private static Style _ellipseLessAppBarButtonStyle;
         private static Style _menuAppBarButtonStyle;
@@ -53,6 +60,32 @@ namespace Yolo
         private Grid _tapGrid;
         private TextBlock _dotsTextBlock;
         private Grid _primaryGrid;
+
+        public bool HomeButtonVisible
+        {
+            get { return (bool) GetValue(HomeButtonVisibleProperty); }
+            set { SetValue(HomeButtonVisibleProperty, value); }
+        }
+
+        public static readonly DependencyProperty HomeButtonVisibleProperty =
+            DependencyProperty.Register("HomeButtonVisible", typeof (bool), typeof (AppBar),
+                new PropertyMetadata(false, PropertyChangedCallback));
+
+        private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            var that = (AppBar)dependencyObject;
+            if (that._homeAppBarButton != null)
+            {
+                if ((bool) dependencyPropertyChangedEventArgs.NewValue)
+                {
+                    that._homeAppBarButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    that._homeAppBarButton.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
 
         #region AppBarPrimaryCommands Property
         public IList<ICommandBarElement> PrimaryCommands
@@ -168,6 +201,8 @@ namespace Yolo
 
 
             _toggleAppBarButton = GetTemplateChild(ToggleAppBarButtonName) as Button;
+            _homeAppBarButton = GetTemplateChild(HomeAppBarButtonName) as Button;
+
             var rowHeight = (GetTemplateChild("MenuRowDefinition") as RowDefinition).Height;
             (GetTemplateChild("FadeOutHeightProperty") as EasingDoubleKeyFrame).Value = rowHeight.Value;
             _ellipseLessAppBarButtonStyle = GetTemplateChild(EllipseLessAppBarButtonStyleName) as Style;
@@ -194,6 +229,19 @@ namespace Yolo
                 args.Handled = true;
                 if (_isOpen) Hide();
             };
+
+            _homeAppBarButton.Loaded += (sender, args) =>
+            {
+                _homeAppBarButton.Click += HomeAppBarButtonOnClick;
+            };
+        }
+
+        private void HomeAppBarButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            if (HomeButtonClicked != null)
+            {
+                HomeButtonClicked(sender as Button, new EventArgs());
+            }
         }
 
         private void ToggleAppBarButtonOnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs manipulationCompletedRoutedEventArgs)
