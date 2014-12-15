@@ -63,12 +63,12 @@ namespace Yolo
 
         public bool HomeButtonVisible
         {
-            get { return (bool) GetValue(HomeButtonVisibleProperty); }
+            get { return (bool)GetValue(HomeButtonVisibleProperty); }
             set { SetValue(HomeButtonVisibleProperty, value); }
         }
 
         public static readonly DependencyProperty HomeButtonVisibleProperty =
-            DependencyProperty.Register("HomeButtonVisible", typeof (bool), typeof (AppBar),
+            DependencyProperty.Register("HomeButtonVisible", typeof(bool), typeof(AppBar),
                 new PropertyMetadata(false, PropertyChangedCallback));
 
         private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
@@ -76,7 +76,7 @@ namespace Yolo
             var that = (AppBar)dependencyObject;
             if (that._homeAppBarButton != null)
             {
-                if ((bool) dependencyPropertyChangedEventArgs.NewValue)
+                if ((bool)dependencyPropertyChangedEventArgs.NewValue)
                 {
                     that._homeAppBarButton.Visibility = Visibility.Visible;
                 }
@@ -100,11 +100,15 @@ namespace Yolo
                     {
                         if (_mainRegionRowDefinition != null)
                             _mainRegionRowDefinition.Height = new GridLength(60, GridUnitType.Pixel);
+                        if (_homeAppBarButton != null) 
+                            _homeAppBarButton.Opacity = 1;
                     }
                     else
                     {
                         if (_mainRegionRowDefinition != null)
                             _mainRegionRowDefinition.Height = new GridLength(20, GridUnitType.Pixel);
+                        if (_homeAppBarButton != null)
+                            _homeAppBarButton.Opacity = 0;
                     }
                     if (_dotsTextBlock != null)
                         _dotsTextBlock.Margin = value.Any() ? new Thickness(0, -5, 0, 0) : new Thickness(0, 12, 0, 0);
@@ -238,9 +242,10 @@ namespace Yolo
 
         private void HomeAppBarButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
-            if (HomeButtonClicked != null)
+            if (HomeButtonClicked != null && (PrimaryCommands.Any() || _isOpen))
             {
                 HomeButtonClicked(sender as Button, new EventArgs());
+                Hide();
             }
         }
 
@@ -301,6 +306,10 @@ namespace Yolo
                 _fadeInProperty.Begin();
                 _isOpen = true;
             }
+            if (_homeAppBarButton != null)
+            {
+                _homeAppBarButton.Opacity = 1;
+            }
         }
 
         public void Hide()
@@ -312,6 +321,10 @@ namespace Yolo
                 _fadeOutProperty.Begin();
                 _isOpen = false;
                 _tapRowDefinition.Height = new GridLength(0, GridUnitType.Pixel);
+            }
+            if (_homeAppBarButton != null)
+            {
+                _homeAppBarButton.Opacity = PrimaryCommands.Any() ? 1 : 0;
             }
         }
 
