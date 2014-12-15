@@ -185,7 +185,7 @@
                                                            Foreground="{ThemeResource AppBarItemForegroundThemeBrush}"
                                                            FontSize="11"
                                                            FontFamily="{TemplateBinding FontFamily}"
-                                                           Margin="0,0,0,10"
+                                                           Margin="0,0,0,8"
                                                            TextAlignment="Center"
                                                            TextWrapping="Wrap"
                                                            Text="{TemplateBinding Label}"
