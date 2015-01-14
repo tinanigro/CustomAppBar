@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppBar", "AppBar\AppBar.csproj", "{C8C5212B-9484-43D5-8B32-629CBF6E0A06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yolo", "CustomAppBar\Yolo.csproj", "{5265645A-4534-4B07-84C7-6F1A16F266EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomAppBar", "CustomAppBar\CustomAppBar.csproj", "{5265645A-4534-4B07-84C7-6F1A16F266EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -4,19 +4,19 @@
       xmlns:local="using:AppBar"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:yolo="using:Yolo"
+      xmlns:customAppBar="using:CustomAppBar"
       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <yolo:AppBar Background="CornflowerBlue"
+        <customAppBar:AppBar Background="CornflowerBlue"
                      VerticalAlignment="Bottom"
                      x:Name="Test">
-            <yolo:AppBar.SecondaryCommands>
+            <customAppBar:AppBar.SecondaryCommands>
                 <AppBarButton Label="coucou ca va?" />
                 <AppBarButton Label="ceci est un test" />
-            </yolo:AppBar.SecondaryCommands>
-        </yolo:AppBar>
+            </customAppBar:AppBar.SecondaryCommands>
+        </customAppBar:AppBar>
         <Button Content="add or remove"
                 Click="ButtonBase_OnClick" />
     </Grid>

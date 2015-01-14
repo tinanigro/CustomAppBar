@@ -11,7 +11,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
-namespace Yolo
+namespace CustomAppBar
 {
     public delegate void HomeButtonTapped(Button button, EventArgs e);
 
