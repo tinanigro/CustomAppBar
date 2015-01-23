@@ -41,20 +41,7 @@ namespace AppBar
         /// Ce paramètre est généralement utilisé pour configurer la page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            //var yolo = new ItemCollection();
-            //yolo.Add(new AppBarButton()
-            //{
-            //    Label = "test",
-            //    Icon=new SymbolIcon(Symbol.Accept)
-            //});
-            //Test.PrimaryCommands = yolo;
-
-            //var swag = new ObservableCollection<AppBarButton>();
-            //swag.Add(new AppBarButton()
-            //{
-            //  Label = "some swag in here"
-            //});
-            //Test.SecondaryCommands = swag;
+            
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
