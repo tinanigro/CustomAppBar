@@ -169,7 +169,7 @@
                                                 </VisualStateManager.VisualStateGroups>
                                                 <Grid HorizontalAlignment="Center"
                                                       Height="40"
-                                                      Margin="0,10,0,4"
+                                                      Margin="0,9,0,7"
                                                       Width="40">
                                                     <Grid x:Name="ContentRoot"
                                                           Background="Transparent">
@@ -179,12 +179,12 @@
                                                                           Foreground="{TemplateBinding Foreground}"
                                                                           HorizontalAlignment="Stretch"
                                                                           VerticalAlignment="Stretch" 
-                                                                          Height="32"
-                                                                          Width="32"/>
+                                                                          Height="36"
+                                                                          Width="36"/>
                                                     </Grid>
                                                 </Grid>
                                                 <TextBlock x:Name="TextLabel"
-                                                           Foreground="{ThemeResource AppBarItemForegroundThemeBrush}"
+                                                           Foreground="White"
                                                            FontSize="11"
                                                            FontFamily="{TemplateBinding FontFamily}"
                                                            Margin="0,0,0,7"
@@ -231,7 +231,7 @@
                                                     </VisualStateGroup>
                                                 </VisualStateManager.VisualStateGroups>
                                                 <TextBlock x:Name="TextLabel"
-                                                           Foreground="{ThemeResource AppBarItemForegroundThemeBrush}"
+                                                           Foreground="White"
                                                            FontSize="27"
                                                            FontWeight="Light"
                                                            FontFamily="{TemplateBinding FontFamily}"
@@ -333,7 +333,8 @@
                                                FontFamily="Segoe UI Symbol"
                                                Margin="0,14,0,0"
                                                FontSize="24"
-                                               HorizontalAlignment="Center" />
+                                               HorizontalAlignment="Center"
+                                               Foreground="White"/>
                                 </Button>
                                 <Button Name="ToggleAppBarButton"
                                         Height="60"
@@ -347,7 +348,8 @@
                                                Margin="0,12,0,0"
                                                FontSize="24"
                                                HorizontalAlignment="Center"
-                                               VerticalAlignment="Center" />
+                                               VerticalAlignment="Center"
+                                               Foreground="White"/>
                                 </Button>
                             </Grid>
                         </Grid>
