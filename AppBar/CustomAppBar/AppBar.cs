@@ -229,8 +229,11 @@ namespace CustomAppBar
             _tapGrid.Tapped += ToggleAppBarButtonOnTap;
             HardwareButtons.BackPressed += (sender, args) =>
             {
-                args.Handled = true;
-                if (_isOpen) Hide();
+                if (_isOpen)
+                {
+                    args.Handled = true;
+                    Hide();
+                }
             };
 
             _homeAppBarButton.Loaded += (sender, args) =>
