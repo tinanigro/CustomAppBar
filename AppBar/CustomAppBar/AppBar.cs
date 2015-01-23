@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Windows.ApplicationModel;
 using Windows.Phone.UI.Input;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -136,6 +137,7 @@ namespace CustomAppBar
                 if (appBarButton is AppBarButton)
                 {
                     (appBarButton as AppBarButton).Style = _ellipseLessAppBarButtonStyle;
+                    (appBarButton as AppBarButton).Foreground= new SolidColorBrush(Colors.White);
                 }
             }
             while (menucommands.Count > 5)
