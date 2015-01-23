@@ -121,7 +121,7 @@
                                         <ControlTemplate TargetType="AppBarButton">
                                             <StackPanel x:Name="LayoutRoot"
                                                         Background="Transparent"
-                                                        Width="80">
+                                                        Width="70">
                                                 <VisualStateManager.VisualStateGroups>
                                                     <VisualStateGroup x:Name="ApplicationViewStates">
                                                         <VisualState x:Name="FullSize" />
@@ -147,7 +147,7 @@
                                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground"
                                                                                                Storyboard.TargetName="Content">
                                                                     <DiscreteObjectKeyFrame KeyTime="0"
-                                                                                            Value="{ThemeResource AppBarItemPressedForegroundThemeBrush}" />
+                                                                                            Value="#99FFFFFF" />
                                                                 </ObjectAnimationUsingKeyFrames>
                                                             </Storyboard>
                                                         </VisualState>
@@ -168,9 +168,9 @@
                                                     </VisualStateGroup>
                                                 </VisualStateManager.VisualStateGroups>
                                                 <Grid HorizontalAlignment="Center"
-                                                      Height="38.5"
-                                                      Margin="0,12,0,4"
-                                                      Width="38.5">
+                                                      Height="40"
+                                                      Margin="0,10,0,4"
+                                                      Width="40">
                                                     <Grid x:Name="ContentRoot"
                                                           Background="Transparent">
                                                         <ContentPresenter x:Name="Content"
@@ -178,18 +178,20 @@
                                                                           Content="{TemplateBinding Icon}"
                                                                           Foreground="{TemplateBinding Foreground}"
                                                                           HorizontalAlignment="Stretch"
-                                                                          VerticalAlignment="Stretch" />
+                                                                          VerticalAlignment="Stretch" 
+                                                                          Height="32"
+                                                                          Width="32"/>
                                                     </Grid>
                                                 </Grid>
                                                 <TextBlock x:Name="TextLabel"
                                                            Foreground="{ThemeResource AppBarItemForegroundThemeBrush}"
                                                            FontSize="11"
                                                            FontFamily="{TemplateBinding FontFamily}"
-                                                           Margin="0,0,0,8"
+                                                           Margin="0,0,0,7"
                                                            TextAlignment="Center"
                                                            TextWrapping="Wrap"
                                                            Text="{TemplateBinding Label}"
-                                                           Width="70.5" />
+                                                           Width="70" />
                                             </StackPanel>
                                         </ControlTemplate>
                                     </Setter.Value>
@@ -307,7 +309,15 @@
                                     <ListView.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <ItemsStackPanel Orientation="Horizontal"
-                                                             HorizontalAlignment="Center" />
+                                                             HorizontalAlignment="Right"
+                                                             Margin="0,0,30,0">
+                                                <ItemsStackPanel.ChildrenTransitions>
+                                                    <TransitionCollection>
+                                                        <AddDeleteThemeTransition />
+                                                        <EntranceThemeTransition FromVerticalOffset="50" />
+                                                    </TransitionCollection>
+                                                </ItemsStackPanel.ChildrenTransitions>
+                                            </ItemsStackPanel>
                                         </ItemsPanelTemplate>
                                     </ListView.ItemsPanel>
                                 </ListView>
@@ -336,7 +346,8 @@
                                                FontFamily="Segoe UI Symbol"
                                                Margin="0,12,0,0"
                                                FontSize="24"
-                                               HorizontalAlignment="Center" />
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
                                 </Button>
                             </Grid>
                         </Grid>

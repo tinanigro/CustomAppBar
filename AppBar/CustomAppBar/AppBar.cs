@@ -110,8 +110,6 @@ namespace CustomAppBar
                         if (_homeAppBarButton != null)
                             _homeAppBarButton.Opacity = 0;
                     }
-                    if (_dotsTextBlock != null)
-                        _dotsTextBlock.Margin = value.Any() ? new Thickness(0, -5, 0, 0) : new Thickness(0, 12, 0, 0);
                 }
             }
         }
@@ -218,7 +216,6 @@ namespace CustomAppBar
             _mainRegionRowDefinition = GetTemplateChild(MainRegionRowDefinitionName) as RowDefinition;
             _tapGrid = GetTemplateChild(TapGridName) as Grid;
             _dotsTextBlock = GetTemplateChild(DotsTextBlockName) as TextBlock;
-            _dotsTextBlock.Margin = new Thickness(0, -5, 0, 0);
 
             _toggleAppBarButton.Loaded += (sender, args) =>
             {
@@ -301,7 +298,6 @@ namespace CustomAppBar
             if (_fadeInProperty != null)
             {
                 _mainRegionRowDefinition.Height = new GridLength(60, GridUnitType.Pixel);
-                _dotsTextBlock.Margin = new Thickness(0, -5, 0, 0);
                 _tapRowDefinition.Height = new GridLength(height - 210, GridUnitType.Pixel);
                 _fadeInProperty.Begin();
                 _isOpen = true;
@@ -317,7 +313,6 @@ namespace CustomAppBar
             if (_fadeOutProperty != null)
             {
                 _mainRegionRowDefinition.Height = PrimaryCommands.Any() ? new GridLength(60, GridUnitType.Pixel) : new GridLength(20, GridUnitType.Pixel);
-                _dotsTextBlock.Margin = PrimaryCommands.Any() ? new Thickness(0, -5, 0, 0) : new Thickness(0, 12, 0, 0); ;
                 _fadeOutProperty.Begin();
                 _isOpen = false;
                 _tapRowDefinition.Height = new GridLength(0, GridUnitType.Pixel);
