@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Windows.ApplicationModel;
-using Windows.Phone.UI.Input;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -11,7 +10,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
-
+#if WINDOWS_PHONE_APP
+using Windows.Phone.UI.Input;
+#endif
 namespace CustomAppBar
 {
     public delegate void HomeButtonTapped(Button button, EventArgs e);
@@ -227,6 +228,7 @@ namespace CustomAppBar
                 _toggleAppBarButton.ManipulationCompleted += ToggleAppBarButtonOnManipulationCompleted;
             };
             _tapGrid.Tapped += ToggleAppBarButtonOnTap;
+#if WINDOWS_PHONE_APP
             HardwareButtons.BackPressed += (sender, args) =>
             {
                 if (_isOpen)
@@ -235,7 +237,7 @@ namespace CustomAppBar
                     Hide();
                 }
             };
-
+#endif
             _homeAppBarButton.Loaded += (sender, args) =>
             {
                 _homeAppBarButton.Click += HomeAppBarButtonOnClick;
