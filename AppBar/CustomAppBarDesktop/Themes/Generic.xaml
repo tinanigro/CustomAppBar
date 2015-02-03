@@ -100,11 +100,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="customAppBar:AppBar">
                     <Grid x:Name="AppBar"
-                          VerticalAlignment="Bottom">
+                          VerticalAlignment="Bottom"
+                          Height="50"
+                          Background="{TemplateBinding Background}">
                         <Grid.Resources>
-                            <x:String x:Key="HamburgerPath">M0,21.388L30.408001, 21.388 30.408001, 24.414    0,24.414z 
-                                                            M0,10.695L30.408001, 10.695 30.408001, 13.721    0,13.721z 
-                                                            M0,0     L30.408001, 0      30.408001, 3.0259995 0,3.0259995z</x:String>
                             <Style x:Key="EllipseLessAppBarButtonStyle"
                                    x:Name="EllipseLessAppBarButtonStyle"
                                    TargetType="AppBarButton">
@@ -121,9 +120,13 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="AppBarButton">
-                                            <StackPanel x:Name="LayoutRoot"
-                                                        Background="Transparent"
-                                                        Width="70">
+                                            <Grid x:Name="LayoutRoot"
+                                                  Background="Transparent"
+                                                  Width="50">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="50" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
                                                 <VisualStateManager.VisualStateGroups>
                                                     <VisualStateGroup x:Name="ApplicationViewStates">
                                                         <VisualState x:Name="FullSize" />
@@ -170,22 +173,26 @@
                                                     </VisualStateGroup>
                                                 </VisualStateManager.VisualStateGroups>
                                                 <Grid HorizontalAlignment="Center"
-                                                      Height="40"
-                                                      Margin="0,9,0,7"
-                                                      Width="40">
+                                                      Height="30"
+                                                      Margin="0"
+                                                      Width="30">
                                                     <Grid x:Name="ContentRoot"
                                                           Background="Transparent">
-                                                        <ContentPresenter x:Name="Content"
-                                                                          AutomationProperties.AccessibilityView="Raw"
-                                                                          Content="{TemplateBinding Icon}"
-                                                                          Foreground="{TemplateBinding Foreground}"
-                                                                          HorizontalAlignment="Stretch"
-                                                                          VerticalAlignment="Stretch"
-                                                                          Height="36"
-                                                                          Width="36" />
+                                                        <Viewbox Stretch="Uniform"
+                                                                 Height="30"
+                                                                 Width="30">
+                                                            <ContentPresenter x:Name="Content"
+                                                                              AutomationProperties.AccessibilityView="Raw"
+                                                                              Content="{TemplateBinding Icon}"
+                                                                              Foreground="{TemplateBinding Foreground}"
+                                                                              HorizontalAlignment="Stretch"
+                                                                              VerticalAlignment="Stretch"
+                                                                              Margin="0,-5,0,0"/>
+                                                        </Viewbox>
                                                     </Grid>
                                                 </Grid>
-                                                <TextBlock x:Name="TextLabel"
+                                                <TextBlock Grid.Row="1"
+                                                           x:Name="TextLabel"
                                                            Foreground="White"
                                                            FontSize="11"
                                                            FontFamily="{TemplateBinding FontFamily}"
@@ -194,7 +201,7 @@
                                                            TextWrapping="Wrap"
                                                            Text="{TemplateBinding Label}"
                                                            Width="70" />
-                                            </StackPanel>
+                                            </Grid>
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
@@ -246,96 +253,65 @@
                                     </Setter.Value>
                                 </Setter>
                             </Style>
-                            <Storyboard x:Name="FadeInProperty">
-                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.GlobalOffsetY)"
-                                                               Storyboard.TargetName="AppBar">
-                                    <EasingDoubleKeyFrame KeyTime="0:0:0.4"
-                                                          Value="0">
-                                        <EasingDoubleKeyFrame.EasingFunction>
-                                            <ExponentialEase EasingMode="EaseOut"
-                                                             Exponent="4" />
-                                        </EasingDoubleKeyFrame.EasingFunction>
-                                    </EasingDoubleKeyFrame>
-                                </DoubleAnimationUsingKeyFrames>
-                            </Storyboard>
-                            <Storyboard x:Name="FadeOutProperty">
-                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.GlobalOffsetY)"
-                                                               Storyboard.TargetName="AppBar">
-                                    <EasingDoubleKeyFrame KeyTime="0:0:0.0"
-                                                          x:Name="FadeOutHeightProperty">
-                                        <EasingDoubleKeyFrame.EasingFunction>
-                                            <ExponentialEase EasingMode="EaseOut"
-                                                             Exponent="4" />
-                                        </EasingDoubleKeyFrame.EasingFunction>
-                                    </EasingDoubleKeyFrame>
-                                </DoubleAnimationUsingKeyFrames>
-                            </Storyboard>
                         </Grid.Resources>
-                        <Grid Background="{TemplateBinding Background}">
-                            <Grid x:Name="PrimaryGrid"
-                                  Grid.Row="0">
-                                <ListView Grid.Column="0"
-                                          x:Name="PrimaryCommands"
-                                          Margin="0,0,0,-12"
-                                          ItemsSource="{TemplateBinding PrimaryCommands}">
-                                    <ListView.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <ItemsStackPanel Orientation="Horizontal"
-                                                             HorizontalAlignment="Right"
-                                                             Margin="0,0,30,0">
-                                                <ItemsStackPanel.ChildrenTransitions>
-                                                    <TransitionCollection>
-                                                        <AddDeleteThemeTransition />
-                                                        <EntranceThemeTransition FromVerticalOffset="50" />
-                                                    </TransitionCollection>
-                                                </ItemsStackPanel.ChildrenTransitions>
-                                            </ItemsStackPanel>
-                                        </ItemsPanelTemplate>
-                                    </ListView.ItemsPanel>
-                                </ListView>
-                                <Button Name="HomeAppBarButton"
-                                        Height="60"
-                                        Width="60"
-                                        Style="{StaticResource TextBlockButtonStyle}"
-                                        VerticalContentAlignment="Stretch"
-                                        HorizontalAlignment="Left"
-                                        Visibility="Collapsed">
-                                    <Grid Background="Transparent"
-                                          VerticalAlignment="Center">
-                                        <Path Data="{StaticResource HamburgerPath}"
-                                              Fill="White"
-                                              HorizontalAlignment="Center" />
-                                    </Grid>
-                                </Button>
-                                <Button Name="ToggleAppBarButton"
-                                        Height="60"
-                                        Width="60"
-                                        Style="{StaticResource TextBlockButtonStyle}"
-                                        VerticalContentAlignment="Top"
-                                        HorizontalAlignment="Right">
-                                    <Button.Flyout>
-                                        <Flyout>
-                                            <ListView x:Name="SecondaryCommands"
-                                                      ItemsSource="{TemplateBinding SecondaryCommands}"
-                                                      Margin="12,24,0,0">
-                                                <ListView.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <ItemsStackPanel />
-                                                    </ItemsPanelTemplate>
-                                                </ListView.ItemsPanel>
-                                            </ListView>
-                                        </Flyout>
-                                    </Button.Flyout>
-                                    <TextBlock x:Name="DotsTextBlock"
-                                               Text=""
-                                               FontFamily="Segoe UI Symbol"
-                                               Margin="0,12,0,0"
-                                               FontSize="24"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"
-                                               Foreground="White" />
-                                </Button>
-                            </Grid>
+                        <Grid x:Name="PrimaryGrid"
+                              Grid.Row="0">
+                            <ListView Grid.Column="0"
+                                      x:Name="PrimaryCommands"
+                                      ItemsSource="{TemplateBinding PrimaryCommands}">
+                                <ListView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <ItemsStackPanel Orientation="Horizontal"
+                                                         HorizontalAlignment="Right"
+                                                         Margin="0,0,20,0">
+                                            <ItemsStackPanel.ChildrenTransitions>
+                                                <TransitionCollection>
+                                                    <AddDeleteThemeTransition />
+                                                    <EntranceThemeTransition FromVerticalOffset="50" />
+                                                </TransitionCollection>
+                                            </ItemsStackPanel.ChildrenTransitions>
+                                        </ItemsStackPanel>
+                                    </ItemsPanelTemplate>
+                                </ListView.ItemsPanel>
+                            </ListView>
+                            <Button Name="HomeAppBarButton"
+                                    Height="50"
+                                    Width="50"
+                                    Style="{StaticResource TextBlockButtonStyle}"
+                                    VerticalContentAlignment="Stretch"
+                                    HorizontalAlignment="Left"
+                                    Visibility="Collapsed">
+                                <Grid Background="Transparent"
+                                      VerticalAlignment="Center">
+                                </Grid>
+                            </Button>
+                            <Button Name="ToggleAppBarButton"
+                                    Height="50"
+                                    Width="50"
+                                    Style="{StaticResource TextBlockButtonStyle}"
+                                    VerticalContentAlignment="Top"
+                                    HorizontalAlignment="Right">
+                                <Button.Flyout>
+                                    <Flyout>
+                                        <ListView x:Name="SecondaryCommands"
+                                                  ItemsSource="{TemplateBinding SecondaryCommands}">
+                                            <ListView.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <ItemsStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ListView.ItemsPanel>
+                                        </ListView>
+                                    </Flyout>
+                                </Button.Flyout>
+                                <TextBlock x:Name="DotsTextBlock"
+                                           Text=""
+                                           FontFamily="Segoe UI Symbol"
+                                           Margin="0,12,0,0"
+                                           FontSize="24"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Foreground="White" />
+                            </Button>
                         </Grid>
                     </Grid>
                 </ControlTemplate>
