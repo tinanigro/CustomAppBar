@@ -18,6 +18,7 @@ namespace CustomAppBarDesktop
     [TemplatePart(Name = PrimaryCommandsName, Type = typeof(ListView))]
     [TemplatePart(Name = SecondaryCommandsName, Type = typeof(ListView))]
     [TemplatePart(Name = IsOpenPropertyName, Type = typeof(bool))]
+    [TemplatePart(Name = ExtraLeftContentName, Type = typeof(object))]
     public sealed class AppBar : Control
     {
         // Events
@@ -32,6 +33,7 @@ namespace CustomAppBarDesktop
         private const string EllipseLessAppBarButtonStyleName = "EllipseLessAppBarButtonStyle";
         private const string MenuAppBarButtonStyleName = "MenuAppBarButtonStyle";
         private const string DotsTextBlockName = "DotsTextBlock";
+        private const string ExtraLeftContentName = "ExtraLeftContent";
 
         private ListView _primaryCommands;
         private ListView _secondaryCommands;
@@ -42,6 +44,27 @@ namespace CustomAppBarDesktop
         private static Style _menuAppBarButtonStyle;
         private TextBlock _dotsTextBlock;
         private Grid _primaryGrid;
+        private ContentControl _extraLeftContent;
+
+        public object ExtraLeftContent
+        {
+            get { return (object)GetValue(ExtraLeftContentProperty); }
+            set { SetValue(ExtraLeftContentProperty, value);}
+        }
+
+        public static readonly DependencyProperty ExtraLeftContentProperty =
+            DependencyProperty.Register(ExtraLeftContentName, typeof(object), typeof(AppBar),
+                new PropertyMetadata(null, ExtraLeftContentPropertyChangedCallback));
+
+        private static void ExtraLeftContentPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            var that = (AppBar) dependencyObject;
+            if (that._extraLeftContent != null)
+            {
+                that._extraLeftContent.Content = (object)dependencyPropertyChangedEventArgs.NewValue;
+                that.ExtraLeftContent = (object)dependencyPropertyChangedEventArgs.NewValue;
+            }
+        }
 
         public bool HomeButtonVisible
         {
@@ -193,6 +216,8 @@ namespace CustomAppBarDesktop
             {
                 _homeAppBarButton.Click += HomeAppBarButtonOnClick;
             };
+            _extraLeftContent = (GetTemplateChild(ExtraLeftContentName) as ContentControl);
+            _extraLeftContent.Content = ExtraLeftContent;
         }
 
         private void HomeAppBarButtonOnClick(object sender, RoutedEventArgs routedEventArgs)

@@ -187,7 +187,7 @@
                                                                               Foreground="{TemplateBinding Foreground}"
                                                                               HorizontalAlignment="Stretch"
                                                                               VerticalAlignment="Stretch"
-                                                                              Margin="0,-5,0,0"/>
+                                                                              Margin="0,-5,0,0" />
                                                         </Viewbox>
                                                     </Grid>
                                                 </Grid>
@@ -254,65 +254,73 @@
                                 </Setter>
                             </Style>
                         </Grid.Resources>
-                        <Grid x:Name="PrimaryGrid"
-                              Grid.Row="0">
-                            <ListView Grid.Column="0"
-                                      x:Name="PrimaryCommands"
-                                      ItemsSource="{TemplateBinding PrimaryCommands}">
-                                <ListView.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <ItemsStackPanel Orientation="Horizontal"
-                                                         HorizontalAlignment="Right"
-                                                         Margin="0,0,20,0">
-                                            <ItemsStackPanel.ChildrenTransitions>
-                                                <TransitionCollection>
-                                                    <AddDeleteThemeTransition />
-                                                    <EntranceThemeTransition FromVerticalOffset="50" />
-                                                </TransitionCollection>
-                                            </ItemsStackPanel.ChildrenTransitions>
-                                        </ItemsStackPanel>
-                                    </ItemsPanelTemplate>
-                                </ListView.ItemsPanel>
-                            </ListView>
-                            <Button Name="HomeAppBarButton"
-                                    Height="50"
-                                    Width="50"
-                                    Style="{StaticResource TextBlockButtonStyle}"
-                                    VerticalContentAlignment="Stretch"
-                                    HorizontalAlignment="Left"
-                                    Visibility="Collapsed">
-                                <Grid Background="Transparent"
-                                      VerticalAlignment="Center">
-                                </Grid>
-                            </Button>
-                            <Button Name="ToggleAppBarButton"
-                                    Height="50"
-                                    Width="50"
-                                    Style="{StaticResource TextBlockButtonStyle}"
-                                    VerticalContentAlignment="Top"
-                                    HorizontalAlignment="Right">
-                                <Button.Flyout>
-                                    <Flyout>
-                                        <ListView x:Name="SecondaryCommands"
-                                                  ItemsSource="{TemplateBinding SecondaryCommands}">
-                                            <ListView.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <ItemsStackPanel />
-                                                </ItemsPanelTemplate>
-                                            </ListView.ItemsPanel>
-                                        </ListView>
-                                    </Flyout>
-                                </Button.Flyout>
-                                <TextBlock x:Name="DotsTextBlock"
-                                           Text=""
-                                           FontFamily="Segoe UI Symbol"
-                                           Margin="0,12,0,0"
-                                           FontSize="24"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"
-                                           Foreground="White" />
-                            </Button>
-                        </Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+                        <ListView Grid.Column="1"
+                                  x:Name="PrimaryCommands"
+                                  ItemsSource="{TemplateBinding PrimaryCommands}">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsStackPanel Orientation="Horizontal"
+                                                     HorizontalAlignment="Right">
+                                        <ItemsStackPanel.ChildrenTransitions>
+                                            <TransitionCollection>
+                                                <AddDeleteThemeTransition />
+                                                <EntranceThemeTransition FromVerticalOffset="50" />
+                                            </TransitionCollection>
+                                        </ItemsStackPanel.ChildrenTransitions>
+                                    </ItemsStackPanel>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                        </ListView>
+                        <Button Grid.Column="0"
+                                Name="HomeAppBarButton"
+                                Height="50"
+                                Width="50"
+                                Style="{StaticResource TextBlockButtonStyle}"
+                                VerticalContentAlignment="Stretch"
+                                HorizontalAlignment="Left"
+                                Visibility="Collapsed">
+                            <Grid Background="Transparent"
+                                  VerticalAlignment="Center">
+                            </Grid>
+                        </Button>
+                        <ContentControl Grid.Column="0"
+                                        x:Name="ExtraLeftContent"
+                                        Height="50"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"/>
+                        <Button Grid.Column="2"
+                                Name="ToggleAppBarButton"
+                                Height="50"
+                                Width="50"
+                                Style="{StaticResource TextBlockButtonStyle}"
+                                VerticalContentAlignment="Top"
+                                HorizontalAlignment="Right">
+                            <Button.Flyout>
+                                <Flyout>
+                                    <ListView x:Name="SecondaryCommands"
+                                              ItemsSource="{TemplateBinding SecondaryCommands}">
+                                        <ListView.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <ItemsStackPanel />
+                                            </ItemsPanelTemplate>
+                                        </ListView.ItemsPanel>
+                                    </ListView>
+                                </Flyout>
+                            </Button.Flyout>
+                            <TextBlock x:Name="DotsTextBlock"
+                                       Text=""
+                                       FontFamily="Segoe UI Symbol"
+                                       Margin="0,12,0,0"
+                                       FontSize="24"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Foreground="White" />
+                        </Button>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
