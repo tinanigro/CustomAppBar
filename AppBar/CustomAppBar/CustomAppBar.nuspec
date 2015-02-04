@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>1.0.2</version>
+    <title>CustomAppBar</title>
+    <authors>Thomas Nigro</authors>
+    <owners>Thomas Nigro</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/ThomasNigro/CustomAppBar</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Provides useful controls for WinRT</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags></tags>
+  </metadata>
+  <files>
+    <file src="bin\Release\CustomAppBar\Themes\Generic.xaml" target="lib\wpa81\CustomAppBar\Themes\Generic.xaml" />
+    <file src="bin\Release\CustomAppBar\Themes\Generic.xbf" target="lib\wpa81\CustomAppBar\Themes\Generic.xbf" />
+    <file src="bin\Release\CustomAppBar.pri" target="lib\wpa81\CustomAppBar.pri" />
+    <file src="bin\Release\CustomAppBar\CustomAppBar.xr.xml" target="lib\wpa81\CustomAppBar\CustomAppBar.xr.xml" />
+  </files>
+</package>
