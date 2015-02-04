@@ -1,15 +1,23 @@
-﻿<Page
-    x:Class="AppBarDesktop.MainPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:AppBarDesktop"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:custom="using:CustomAppBarDesktop"
-    mc:Ignorable="d">
+﻿<Page x:Class="AppBarDesktop.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:AppBarDesktop"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:custom="using:CustomAppBarDesktop"
+      mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"><Button Click="ButtonBase_OnClick"/>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Button Click="ButtonBase_OnClick" />
         <custom:AppBar x:Name="Test"
-                       Background="RoyalBlue"/>
+                       Background="RoyalBlue">
+            <custom:AppBar.ExtraLeftContent>
+                <Grid Background="Red"
+                      Width="60"
+                      Height="60">
+                    <TextBlock Text="yolo" />
+                </Grid>
+            </custom:AppBar.ExtraLeftContent>
+        </custom:AppBar>
     </Grid>
 </Page>
