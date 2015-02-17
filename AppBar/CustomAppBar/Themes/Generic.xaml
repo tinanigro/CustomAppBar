@@ -244,55 +244,21 @@
                                     </Setter.Value>
                                 </Setter>
                             </Style>
-                            <Storyboard x:Name="FadeInProperty">
-                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.GlobalOffsetY)"
-                                                               Storyboard.TargetName="AppBar">
-                                    <EasingDoubleKeyFrame KeyTime="0:0:0.4"
-                                                          Value="0">
-                                        <EasingDoubleKeyFrame.EasingFunction>
-                                            <ExponentialEase EasingMode="EaseOut"
-                                                             Exponent="4" />
-                                        </EasingDoubleKeyFrame.EasingFunction>
-                                    </EasingDoubleKeyFrame>
-                                </DoubleAnimationUsingKeyFrames>
-                            </Storyboard>
-                            <Storyboard x:Name="FadeOutProperty">
-                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.GlobalOffsetY)"
-                                                               Storyboard.TargetName="AppBar">
-                                    <EasingDoubleKeyFrame KeyTime="0:0:0.0"
-                                                          x:Name="FadeOutHeightProperty">
-                                        <EasingDoubleKeyFrame.EasingFunction>
-                                            <ExponentialEase EasingMode="EaseOut"
-                                                             Exponent="4" />
-                                        </EasingDoubleKeyFrame.EasingFunction>
-                                    </EasingDoubleKeyFrame>
-                                </DoubleAnimationUsingKeyFrames>
-                            </Storyboard>
                         </Grid.Resources>
-                        <Grid.Projection>
-                            <PlaneProjection GlobalOffsetY="150"
-                                             x:Name="CompositeTransform" />
-                        </Grid.Projection>
                         <Grid.RowDefinitions>
                             <RowDefinition x:Name="TapRowDefinition"
                                            Height="0" />
-                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="60" />
                         </Grid.RowDefinitions>
                         <Grid x:Name="TapGrid"
                               Background="Transparent"
-                              Grid.Row="0" />
-                        <Grid Grid.Row="1"
-                              Background="{TemplateBinding Background}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"
-                                               x:Name="MainRegionRowDefinition" />
-                                <RowDefinition Height="150"
-                                               x:Name="MenuRowDefinition" />
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="1">
+                              Grid.Row="0">
+                            <Grid Background="DimGray"
+                                  VerticalAlignment="Bottom"
+                                  HorizontalAlignment="Right">
                                 <ListView x:Name="SecondaryCommands"
                                           ItemsSource="{TemplateBinding SecondaryCommands}"
-                                          Margin="12,24,0,0">
+                                          Margin="12,0">
                                     <ListView.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <ItemsStackPanel />
@@ -300,8 +266,9 @@
                                     </ListView.ItemsPanel>
                                 </ListView>
                             </Grid>
-                            <Grid x:Name="PrimaryGrid"
-                                  Grid.Row="0">
+                        </Grid>
+                        <Grid Grid.Row="1"
+                              Background="{TemplateBinding Background}">
                                 <ListView Grid.Column="0"
                                           x:Name="PrimaryCommands"
                                           Margin="0,0,0,-12"
@@ -332,22 +299,21 @@
                                           Fill="White"
                                           HorizontalAlignment="Center"/>
                                 </Button>
-                                <Button Name="ToggleAppBarButton"
-                                        Height="60"
-                                        Width="60"
-                                        Style="{StaticResource TextBlockButtonStyle}"
-                                        VerticalContentAlignment="Top"
-                                        HorizontalAlignment="Right">
-                                    <TextBlock x:Name="DotsTextBlock"
-                                               Text=""
-                                               FontFamily="Segoe UI Symbol"
-                                               Margin="0,12,0,0"
-                                               FontSize="24"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"
-                                               Foreground="White"/>
-                                </Button>
-                            </Grid>
+                            <Button Name="ToggleAppBarButton"
+                                    Height="60"
+                                    Width="60"
+                                    Style="{StaticResource TextBlockButtonStyle}"
+                                    VerticalContentAlignment="Top"
+                                    HorizontalAlignment="Right">
+                                <TextBlock x:Name="DotsTextBlock"
+                                           Text=""
+                                           FontFamily="Segoe UI Symbol"
+                                           Margin="0,12,0,0"
+                                           FontSize="24"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Foreground="White" />
+                            </Button>
                         </Grid>
                     </Grid>
                 </ControlTemplate>

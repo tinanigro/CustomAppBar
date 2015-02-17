@@ -17,8 +17,6 @@ namespace CustomAppBar
 {
     public delegate void HomeButtonTapped(Button button, EventArgs e);
 
-    [TemplatePart(Name = FadeInPropertyName, Type = typeof(Storyboard))]
-    [TemplatePart(Name = FadeOutPropertyName, Type = typeof(Storyboard))]
     [TemplatePart(Name = PrimaryCommandsName, Type = typeof(ListView))]
     [TemplatePart(Name = SecondaryCommandsName, Type = typeof(ListView))]
     [TemplatePart(Name = IsOpenPropertyName, Type = typeof(bool))]
@@ -26,10 +24,6 @@ namespace CustomAppBar
     {
         // Events
         public event HomeButtonTapped HomeButtonClicked;
-
-        // Storyboards
-        private const string FadeInPropertyName = "FadeInProperty";
-        private const string FadeOutPropertyName = "FadeOutProperty";
 
 
         private const string PrimaryCommandsName = "PrimaryCommandsProperty";
@@ -39,15 +33,9 @@ namespace CustomAppBar
         private const string HomeAppBarButtonName = "HomeAppBarButton";
         private const string EllipseLessAppBarButtonStyleName = "EllipseLessAppBarButtonStyle";
         private const string MenuAppBarButtonStyleName = "MenuAppBarButtonStyle";
-        private const string CompositeTransformName = "CompositeTransform";
         private const string TapRowDefinitionName = "TapRowDefinition";
-        private const string MainRegionRowDefinitionName = "MainRegionRowDefinition";
         private const string TapGridName = "TapGrid";
         private const string DotsTextBlockName = "DotsTextBlock";
-
-        // Storyboard
-        private Storyboard _fadeInProperty;
-        private Storyboard _fadeOutProperty;
 
         private ListView _primaryCommands;
         private ListView _secondaryCommands;
@@ -56,9 +44,7 @@ namespace CustomAppBar
         private bool _isOpen;
         private static Style _ellipseLessAppBarButtonStyle;
         private static Style _menuAppBarButtonStyle;
-        private PlaneProjection _compositeTransform;
         private RowDefinition _tapRowDefinition;
-        private RowDefinition _mainRegionRowDefinition;
         private Grid _tapGrid;
         private TextBlock _dotsTextBlock;
         private Grid _primaryGrid;
@@ -100,15 +86,11 @@ namespace CustomAppBar
                 {
                     if (PrimaryCommands.Any())
                     {
-                        if (_mainRegionRowDefinition != null)
-                            _mainRegionRowDefinition.Height = new GridLength(60, GridUnitType.Pixel);
-                        if (_homeAppBarButton != null) 
+                        if (_homeAppBarButton != null)
                             _homeAppBarButton.Opacity = 1;
                     }
                     else
                     {
-                        if (_mainRegionRowDefinition != null)
-                            _mainRegionRowDefinition.Height = new GridLength(20, GridUnitType.Pixel);
                         if (_homeAppBarButton != null)
                             _homeAppBarButton.Opacity = 0;
                     }
@@ -138,7 +120,7 @@ namespace CustomAppBar
                 if (appBarButton is AppBarButton)
                 {
                     (appBarButton as AppBarButton).Style = _ellipseLessAppBarButtonStyle;
-                    (appBarButton as AppBarButton).Foreground= new SolidColorBrush(Colors.White);
+                    (appBarButton as AppBarButton).Foreground = new SolidColorBrush(Colors.White);
                 }
             }
             while (menucommands.Count > 5)
@@ -200,32 +182,21 @@ namespace CustomAppBar
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            //Storyboards
-            _fadeInProperty = GetTemplateChild(FadeInPropertyName) as Storyboard;
-            _fadeOutProperty = GetTemplateChild(FadeOutPropertyName) as Storyboard;
-
 
             _toggleAppBarButton = GetTemplateChild(ToggleAppBarButtonName) as Button;
             _homeAppBarButton = GetTemplateChild(HomeAppBarButtonName) as Button;
 
-            var rowHeight = (GetTemplateChild("MenuRowDefinition") as RowDefinition).Height;
-            (GetTemplateChild("FadeOutHeightProperty") as EasingDoubleKeyFrame).Value = rowHeight.Value;
             _ellipseLessAppBarButtonStyle = GetTemplateChild(EllipseLessAppBarButtonStyleName) as Style;
             _menuAppBarButtonStyle = GetTemplateChild(MenuAppBarButtonStyleName) as Style;
             SecondaryCommands = UpdateMenuButtonStyles(SecondaryCommands, this);
             PrimaryCommands = UpdateMainButtonStyles(PrimaryCommands);
-            _compositeTransform = GetTemplateChild(CompositeTransformName) as PlaneProjection;
             _tapRowDefinition = GetTemplateChild(TapRowDefinitionName) as RowDefinition;
-            _mainRegionRowDefinition = GetTemplateChild(MainRegionRowDefinitionName) as RowDefinition;
             _tapGrid = GetTemplateChild(TapGridName) as Grid;
             _dotsTextBlock = GetTemplateChild(DotsTextBlockName) as TextBlock;
 
             _toggleAppBarButton.Loaded += (sender, args) =>
             {
                 _toggleAppBarButton.Tapped += ToggleAppBarButtonOnTap;
-                _toggleAppBarButton.ManipulationMode = ManipulationModes.TranslateY;
-                _toggleAppBarButton.ManipulationDelta += ToggleAppBarButtonOnManipulationDelta;
-                _toggleAppBarButton.ManipulationCompleted += ToggleAppBarButtonOnManipulationCompleted;
             };
             _tapGrid.Tapped += ToggleAppBarButtonOnTap;
 #if WINDOWS_PHONE_APP
@@ -253,35 +224,6 @@ namespace CustomAppBar
             }
         }
 
-        private void ToggleAppBarButtonOnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs manipulationCompletedRoutedEventArgs)
-        {
-            if (manipulationCompletedRoutedEventArgs.Velocities.Linear.Y < 0)
-            {
-                Show();
-            }
-            else
-            {
-                Hide();
-            }
-        }
-
-        private void ToggleAppBarButtonOnManipulationDelta(object sender,
-            ManipulationDeltaRoutedEventArgs manipulationDeltaRoutedEventArgs)
-        {
-            Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                if (_compositeTransform.GlobalOffsetY > -1 && _compositeTransform.GlobalOffsetY < 151)
-                {
-                    _compositeTransform.GlobalOffsetY += manipulationDeltaRoutedEventArgs.Delta.Translation.Y;
-                }
-                if (_compositeTransform.GlobalOffsetY < 0)
-                    _compositeTransform.GlobalOffsetY = 0;
-                else if (_compositeTransform.GlobalOffsetY > 150)
-                    _compositeTransform.GlobalOffsetY = 150;
-            });
-            Debug.WriteLine(manipulationDeltaRoutedEventArgs.Delta.Translation.Y + " control : " + _compositeTransform.GlobalOffsetY);
-        }
-
         private void ToggleAppBarButtonOnTap(object sender, RoutedEventArgs routedEventArgs)
         {
             ShowOrHide();
@@ -302,34 +244,15 @@ namespace CustomAppBar
         public void Show()
         {
             var height = Window.Current.Bounds.Height;
-            if (_fadeInProperty != null)
-            {
-                _mainRegionRowDefinition.Height = new GridLength(60, GridUnitType.Pixel);
-                _tapRowDefinition.Height = new GridLength(height - 210, GridUnitType.Pixel);
-                _fadeInProperty.Begin();
-                _isOpen = true;
-            }
-            if (_homeAppBarButton != null)
-            {
-                _homeAppBarButton.Opacity = 1;
-            }
+            _tapRowDefinition.Height = new GridLength(height - 60, GridUnitType.Pixel);
+            _isOpen = true;
         }
 
         public void Hide()
         {
-            if (_fadeOutProperty != null)
-            {
-                _mainRegionRowDefinition.Height = PrimaryCommands.Any() ? new GridLength(60, GridUnitType.Pixel) : new GridLength(20, GridUnitType.Pixel);
-                _fadeOutProperty.Begin();
-                _isOpen = false;
-                _tapRowDefinition.Height = new GridLength(0, GridUnitType.Pixel);
-            }
-            if (_homeAppBarButton != null)
-            {
-                _homeAppBarButton.Opacity = PrimaryCommands.Any() ? 1 : 0;
-            }
+            _isOpen = false;
+            _tapRowDefinition.Height = new GridLength(0, GridUnitType.Pixel);
         }
-
     }
 }
 

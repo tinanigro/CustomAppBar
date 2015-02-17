@@ -24,7 +24,7 @@ namespace CustomAppBarDesktop
         // Events
         public event HomeButtonTapped HomeButtonClicked;
 
-
+        private const string AppBarName = "AppBar";
         private const string PrimaryCommandsName = "PrimaryCommandsProperty";
         private const string SecondaryCommandsName = "SecondaryCommandsProperty";
         private const string IsOpenPropertyName = "IsOpenProperty";
@@ -35,6 +35,7 @@ namespace CustomAppBarDesktop
         private const string DotsTextBlockName = "DotsTextBlock";
         private const string ExtraLeftContentName = "ExtraLeftContent";
 
+        private Grid _appBar;
         private ListView _primaryCommands;
         private ListView _secondaryCommands;
         private Button _toggleAppBarButton;
@@ -48,8 +49,9 @@ namespace CustomAppBarDesktop
 
         public object ExtraLeftContent
         {
-            get { return (object)GetValue(ExtraLeftContentProperty); }
-            set { SetValue(ExtraLeftContentProperty, value);}
+            get
+            { return (object)GetValue(ExtraLeftContentProperty); }
+            set { SetValue(ExtraLeftContentProperty, value); }
         }
 
         public static readonly DependencyProperty ExtraLeftContentProperty =
@@ -58,7 +60,7 @@ namespace CustomAppBarDesktop
 
         private static void ExtraLeftContentPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            var that = (AppBar) dependencyObject;
+            var that = (AppBar)dependencyObject;
             if (that._extraLeftContent != null)
             {
                 that._extraLeftContent.Content = (object)dependencyPropertyChangedEventArgs.NewValue;
@@ -155,6 +157,11 @@ namespace CustomAppBarDesktop
             set
             {
                 SetValue(SecondaryCommandsProperty, UpdateMenuButtonStyles(value, this));
+                if (_toggleAppBarButton == null) return;
+                if (value.Any()) 
+                    _toggleAppBarButton.Visibility = Visibility.Visible;
+                else 
+                    _toggleAppBarButton.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -199,6 +206,7 @@ namespace CustomAppBarDesktop
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+            _appBar = GetTemplateChild(AppBarName) as Grid;
             _toggleAppBarButton = GetTemplateChild(ToggleAppBarButtonName) as Button;
             _homeAppBarButton = GetTemplateChild(HomeAppBarButtonName) as Button;
 
@@ -207,7 +215,17 @@ namespace CustomAppBarDesktop
             SecondaryCommands = UpdateMenuButtonStyles(SecondaryCommands, this);
             PrimaryCommands = UpdateMainButtonStyles(PrimaryCommands);
             _dotsTextBlock = GetTemplateChild(DotsTextBlockName) as TextBlock;
+            _extraLeftContent = (GetTemplateChild(ExtraLeftContentName) as ContentControl);
 
+
+            if (_appBar != null) _appBar.Loaded += (sender, args) =>
+            {
+#if WINDOWS_APP
+                _appBar.Height = 50;
+#else
+                _appBar.Height = 60;
+#endif
+            };
             _toggleAppBarButton.Loaded += (sender, args) =>
             {
                 _toggleAppBarButton.Tapped += ToggleAppBarButtonOnTap;
@@ -216,7 +234,6 @@ namespace CustomAppBarDesktop
             {
                 _homeAppBarButton.Click += HomeAppBarButtonOnClick;
             };
-            _extraLeftContent = (GetTemplateChild(ExtraLeftContentName) as ContentControl);
             _extraLeftContent.Content = ExtraLeftContent;
         }
 
@@ -263,8 +280,12 @@ namespace CustomAppBarDesktop
             {
                 _homeAppBarButton.Opacity = PrimaryCommands.Any() ? 1 : 0;
             }
+#if WINDOWS_APP
+            var flyout = (GetTemplateChild("MenuFlyout") as Flyout);
+            if(flyout==null)return;
+            flyout.Hide();
+#endif
         }
-
     }
 }
 
