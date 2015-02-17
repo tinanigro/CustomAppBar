@@ -62,6 +62,21 @@ namespace AppBarDesktop
                     Icon = new SymbolIcon(Symbol.Remote)
                 });
                 Test.PrimaryCommands = tt;
+                Test.SecondaryCommands = new List<AppBarButton>()
+                {
+                    new AppBarButton()
+                    {
+                        Label = "coucou test",
+                    },
+                    new AppBarButton()
+                    {
+                        Label = "coucou test",
+                    },
+                    new AppBarButton()
+                    {
+                        Label = "coucou test",
+                    }
+                };
             }
             Test.HomeButtonVisible = true;
         }
