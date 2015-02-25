@@ -186,6 +186,7 @@ namespace CustomAppBarDesktop
             foreach (var appBarButton in menucommands)
             {
                 appBarButton.Style = _menuAppBarButtonStyle;
+                appBarButton.Foreground = appBar.Background;
                 appBarButton.Click += (sender, args) => appBar.Hide();
             }
             return menucommands;
