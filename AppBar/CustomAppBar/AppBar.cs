@@ -10,22 +10,21 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
-#if WINDOWS_PHONE_APP
-using Windows.Phone.UI.Input;
-#endif
-namespace CustomAppBar
+
+namespace CustomAppBarDesktop
 {
     public delegate void HomeButtonTapped(Button button, EventArgs e);
 
     [TemplatePart(Name = PrimaryCommandsName, Type = typeof(ListView))]
     [TemplatePart(Name = SecondaryCommandsName, Type = typeof(ListView))]
     [TemplatePart(Name = IsOpenPropertyName, Type = typeof(bool))]
+    [TemplatePart(Name = ExtraLeftContentName, Type = typeof(object))]
     public sealed class AppBar : Control
     {
         // Events
         public event HomeButtonTapped HomeButtonClicked;
 
-
+        private const string AppBarName = "AppBar";
         private const string PrimaryCommandsName = "PrimaryCommandsProperty";
         private const string SecondaryCommandsName = "SecondaryCommandsProperty";
         private const string IsOpenPropertyName = "IsOpenProperty";
@@ -33,10 +32,10 @@ namespace CustomAppBar
         private const string HomeAppBarButtonName = "HomeAppBarButton";
         private const string EllipseLessAppBarButtonStyleName = "EllipseLessAppBarButtonStyle";
         private const string MenuAppBarButtonStyleName = "MenuAppBarButtonStyle";
-        private const string TapRowDefinitionName = "TapRowDefinition";
-        private const string TapGridName = "TapGrid";
         private const string DotsTextBlockName = "DotsTextBlock";
+        private const string ExtraLeftContentName = "ExtraLeftContent";
 
+        private Grid _appBar;
         private ListView _primaryCommands;
         private ListView _secondaryCommands;
         private Button _toggleAppBarButton;
@@ -44,10 +43,31 @@ namespace CustomAppBar
         private bool _isOpen;
         private static Style _ellipseLessAppBarButtonStyle;
         private static Style _menuAppBarButtonStyle;
-        private RowDefinition _tapRowDefinition;
-        private Grid _tapGrid;
         private TextBlock _dotsTextBlock;
         private Grid _primaryGrid;
+        private ContentControl _extraLeftContent;
+        private Flyout _menuFlyout;
+
+        public object ExtraLeftContent
+        {
+            get
+            { return (object)GetValue(ExtraLeftContentProperty); }
+            set { SetValue(ExtraLeftContentProperty, value); }
+        }
+
+        public static readonly DependencyProperty ExtraLeftContentProperty =
+            DependencyProperty.Register(ExtraLeftContentName, typeof(object), typeof(AppBar),
+                new PropertyMetadata(null, ExtraLeftContentPropertyChangedCallback));
+
+        private static void ExtraLeftContentPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            var that = (AppBar)dependencyObject;
+            if (that._extraLeftContent != null)
+            {
+                that._extraLeftContent.Content = (object)dependencyPropertyChangedEventArgs.NewValue;
+                that.ExtraLeftContent = (object)dependencyPropertyChangedEventArgs.NewValue;
+            }
+        }
 
         public bool HomeButtonVisible
         {
@@ -138,6 +158,11 @@ namespace CustomAppBar
             set
             {
                 SetValue(SecondaryCommandsProperty, UpdateMenuButtonStyles(value, this));
+                if (_toggleAppBarButton == null) return;
+                if (value.Any())
+                    _toggleAppBarButton.Visibility = Visibility.Visible;
+                else
+                    _toggleAppBarButton.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -162,6 +187,7 @@ namespace CustomAppBar
             foreach (var appBarButton in menucommands)
             {
                 appBarButton.Style = _menuAppBarButtonStyle;
+                appBarButton.Foreground = appBar.Background;
                 appBarButton.Click += (sender, args) => appBar.Hide();
             }
             return menucommands;
@@ -182,7 +208,7 @@ namespace CustomAppBar
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-
+            _appBar = GetTemplateChild(AppBarName) as Grid;
             _toggleAppBarButton = GetTemplateChild(ToggleAppBarButtonName) as Button;
             _homeAppBarButton = GetTemplateChild(HomeAppBarButtonName) as Button;
 
@@ -190,29 +216,39 @@ namespace CustomAppBar
             _menuAppBarButtonStyle = GetTemplateChild(MenuAppBarButtonStyleName) as Style;
             SecondaryCommands = UpdateMenuButtonStyles(SecondaryCommands, this);
             PrimaryCommands = UpdateMainButtonStyles(PrimaryCommands);
-            _tapRowDefinition = GetTemplateChild(TapRowDefinitionName) as RowDefinition;
-            _tapGrid = GetTemplateChild(TapGridName) as Grid;
             _dotsTextBlock = GetTemplateChild(DotsTextBlockName) as TextBlock;
+            _extraLeftContent = (GetTemplateChild(ExtraLeftContentName) as ContentControl);
 
+
+            if (_appBar != null)
+                _appBar.Loaded += (sender, args) =>
+                {
+#if WINDOWS_APP
+                _appBar.Height = 50;
+#else
+                    _appBar.Height = 60;
+#endif
+                };
             _toggleAppBarButton.Loaded += (sender, args) =>
             {
                 _toggleAppBarButton.Tapped += ToggleAppBarButtonOnTap;
             };
-            _tapGrid.Tapped += ToggleAppBarButtonOnTap;
-#if WINDOWS_PHONE_APP
-            HardwareButtons.BackPressed += (sender, args) =>
-            {
-                if (_isOpen)
-                {
-                    args.Handled = true;
-                    Hide();
-                }
-            };
-#endif
             _homeAppBarButton.Loaded += (sender, args) =>
             {
                 _homeAppBarButton.Click += HomeAppBarButtonOnClick;
             };
+            _extraLeftContent.Content = ExtraLeftContent;
+            _menuFlyout = (GetTemplateChild("MenuFlyout") as Flyout);
+            if (_menuFlyout != null)
+            {
+                var grid = _menuFlyout.Content as Grid;
+                grid.Tapped += Grid_Tapped;
+            }
+        }
+
+        private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            _menuFlyout.Hide();
         }
 
         private void HomeAppBarButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
@@ -244,14 +280,22 @@ namespace CustomAppBar
         public void Show()
         {
             var height = Window.Current.Bounds.Height;
-            _tapRowDefinition.Height = new GridLength(height - 60, GridUnitType.Pixel);
             _isOpen = true;
+            if (_homeAppBarButton != null)
+            {
+                _homeAppBarButton.Opacity = 1;
+            }
         }
 
         public void Hide()
         {
             _isOpen = false;
-            _tapRowDefinition.Height = new GridLength(0, GridUnitType.Pixel);
+            if (_homeAppBarButton != null)
+            {
+                _homeAppBarButton.Opacity = PrimaryCommands.Any() ? 1 : 0;
+            }
+            if(_menuFlyout != null)
+                _menuFlyout.Hide();
         }
     }
 }
