@@ -734,8 +734,8 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="AppBarButton">
-                                            <StackPanel x:Name="LayoutRoot"
-                                                        Background="Transparent">
+                                            <Grid x:Name="LayoutRoot"
+                                                  Background="Transparent">
                                                 <VisualStateManager.VisualStateGroups>
                                                     <VisualStateGroup x:Name="CommonStates">
                                                         <VisualState x:Name="Normal" />
@@ -751,7 +751,29 @@
                                                         </VisualState>
                                                     </VisualStateGroup>
                                                 </VisualStateManager.VisualStateGroups>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="30" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid Height="30"
+                                                      Margin="0"
+                                                      Width="30">
+                                                    <Grid x:Name="ContentRoot"
+                                                          Background="Transparent">
+                                                        <Viewbox Stretch="Uniform"
+                                                                 Height="30"
+                                                                 Width="30">
+                                                            <ContentPresenter x:Name="Content"
+                                                                              AutomationProperties.AccessibilityView="Raw"
+                                                                              Content="{TemplateBinding Icon}"
+                                                                              Foreground="{TemplateBinding Foreground}"
+                                                                              HorizontalAlignment="Stretch"
+                                                                              VerticalAlignment="Stretch" />
+                                                        </Viewbox>
+                                                    </Grid>
+                                                </Grid>
                                                 <TextBlock x:Name="TextLabel"
+                                                           Grid.Column="1"
                                                            Foreground="Black"
                                                            FontSize="27"
                                                            FontWeight="Light"
@@ -760,7 +782,7 @@
                                                            TextAlignment="Center"
                                                            TextWrapping="Wrap"
                                                            Text="{TemplateBinding Label}" />
-                                            </StackPanel>
+                                            </Grid>
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
