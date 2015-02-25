@@ -4,17 +4,19 @@
       xmlns:local="using:AppBar"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:customAppBar="using:CustomAppBar"
+      xmlns:customAppBar="using:CustomAppBarDesktop"
       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
         <customAppBar:AppBar Background="CornflowerBlue"
-                     VerticalAlignment="Bottom"
-                     x:Name="Test">
+                             VerticalAlignment="Bottom"
+                             x:Name="Test">
             <customAppBar:AppBar.SecondaryCommands>
-                <AppBarButton Label="coucou ca va?" />
-                <AppBarButton Label="ceci est un test" />
+                <AppBarButton Label="coucou ca va?"
+                              Icon="Account" />
+                <AppBarButton Label="ceci est un test"
+                              Icon="Calendar" />
             </customAppBar:AppBar.SecondaryCommands>
         </customAppBar:AppBar>
         <Button Content="add or remove"
